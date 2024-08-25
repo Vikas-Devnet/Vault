@@ -26,4 +26,6 @@
     <string name="nav_account_register">Don\'t have an account ? Register</string>
     <string name="nav_existing_user_login">Existing User ? Login</string>
     <string name="app_power">Powered by DevNet</string>
+    <string name="notification">Notification</string>
+    <string name="add_password">Add Password</string>
 </resources>

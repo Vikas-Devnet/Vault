@@ -43,7 +43,7 @@ class Devnet(appContext: Context) {
                 }
             }
     }
-    fun firebaseUserRegister(email: String, password: String, auth: FirebaseAuth, onSuccess: () -> Unit){
+    fun firebaseUserRegister(email: String, password: String, auth: FirebaseAuth, onSuccess: () -> Unit,onFailure: () -> Unit){
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -52,14 +52,14 @@ class Devnet(appContext: Context) {
                         "Password" to password,
                         "Registration Date" to SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
                     )
-                    firebaseStoreData(auth, FirebaseDatabase.getInstance().reference, "Profile", userData, onSuccess)
+                    firebaseStoreData(auth, FirebaseDatabase.getInstance().reference, "Profile", userData, onSuccess,onFailure)
                 } else {
                     Toast.makeText(currentContext, "Registration failed: ${task.exception?.message}",
                         Toast.LENGTH_SHORT).show()
                 }
             }
     }
-    fun <K, V> firebaseStoreData(auth: FirebaseAuth, dbRef: DatabaseReference, menu: String, userData: Map<K, V>,onSuccess: () -> Unit) {
+    fun <K, V> firebaseStoreData(auth: FirebaseAuth, dbRef: DatabaseReference, menu: String, userData: Map<K, V>,onSuccess: () -> Unit,onFailure: () -> Unit) {
         val currentUID = auth.currentUser?.uid
         if (currentUID != null) {
             val pathRef = dbRef.child(currentUID).child(menu)
@@ -67,13 +67,12 @@ class Devnet(appContext: Context) {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         onSuccess()
-                        Toast.makeText(currentContext, "User Created successfully!", Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(currentContext, "Registration Completed But Failed to Create Profile", Toast.LENGTH_SHORT).show()
+                        onFailure()
                     }
                 }
         } else {
-            Toast.makeText(currentContext, "Registration Completed But Failed to Create Profile", Toast.LENGTH_SHORT).show()
+            onFailure()
         }
     }
 

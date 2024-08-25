@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -80,7 +81,10 @@ class AuthActivity : AppCompatActivity() {
                 }else{
                     _devnet.firebaseUserRegister(email, password,_auth, onSuccess = {
                         startActivity(Intent(this, MainActivity::class.java))
+                        Toast.makeText(this, "User Created successfully!", Toast.LENGTH_SHORT).show()
                         finish()
+                    }, onFailure = {
+                        Toast.makeText(this, "Registration Completed But Failed to Create Profile", Toast.LENGTH_SHORT).show()
                     })
                 }
             }
